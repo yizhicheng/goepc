@@ -6,7 +6,7 @@ if os.path.exists('./build/'):
   shutil.rmtree('./build/')
 
 # copy all file to build dir
-shutil.copytree('./','./build/', symlinks=False, ignore=shutil.ignore_patterns('*.py', '*.docx', 'deploy.js','.DS_Store', 'package-lock.json', 'build') )
+shutil.copytree('./','./build/', symlinks=False, ignore=shutil.ignore_patterns('*.py', '*.docx', 'deploy.js','.DS_Store', 'package-lock.json', 'build', '.git') )
 list = ['./build/css/style.css', './build/index.html','./build/book.html','./build/member.html','./build/goe.html','./build/plan.html', './build/ico.html' ]
 
 def repip_func(file_path):
@@ -23,4 +23,4 @@ def repip_func(file_path):
 for file_path in list:
   repip_func(file_path)
 # deploy to server
-os.system('rsync --delete -avrg ./build/* root@47.75.103.224:/var/www/goe/pc');
+os.system('rsync --delete -avrg --chmod=ugo=rwx ./build/* root@47.75.103.224:/var/www/goe/pc');

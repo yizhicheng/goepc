@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import sys,os,shutil,stat,time,re
+# 图片的路径
+imgdir = './build/image/'
 
 def clear(): 
     if os.path.exists('./build/'):
@@ -69,13 +71,31 @@ def get_all_css():
     f.write( new_css )
     # 关闭打开的文件
     f.close()
+
+def CompressImage(image_name,max_size):
+    image_stat = os.stat(image_name)
     
+    image_size = image_stat.st_size / 1024.0
+    if image_size > max_size:
+        compress_factor = max_size / image_size * 100
+        os.system( "magick convert -quality 75% " + image_name + " " + image_name )
+#1000kb以上的进行压缩压缩至75%   
+def CompressAll():
+    ext_names = ['.JPG','.jpg','.jepg','.png','.gif']
+    for each_image in os.listdir( imgdir ):
+        for ext_name in ext_names:
+            if ext_name in each_image:
+                CompressImage(imgdir+each_image,1000)
+                break
+   
 def start():
     clear()
     copy()
     replace_version( version=int( time.time() ) )
     # 压缩合并css
     get_all_css()
+    # 压缩图片
+    CompressAll() 
     deploy()
     
 # 启动编译部署脚本
